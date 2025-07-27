@@ -11,7 +11,9 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using PRN_SafeDrive_Aplication.Admin;
 using PRN_SafeDrive_Aplication.Home;
+using PRN_SafeDrive_Aplication.Log;
 using PRN_SafeDrive_Aplication.Models;
 using PRN_SafeDrive_Aplication.Police;
 using PRN_SafeDrive_Aplication.Student;
@@ -31,6 +33,7 @@ namespace PRN_SafeDrive_Aplication.BiLL
             UIStudent.Visibility = Visibility.Collapsed;
             UITeachers.Visibility = Visibility.Collapsed;
             UIPolice.Visibility = Visibility.Collapsed;
+            UIAdmin.Visibility = Visibility.Collapsed;
 
 
             string roleTest = SessionUser.Role;
@@ -43,14 +46,17 @@ namespace PRN_SafeDrive_Aplication.BiLL
             {
                 UIStudent.Visibility = Visibility.Visible;       // Hiển thị giao diện sinh viên
             }
-            else if (SessionUser.Role == ("Teacher"))
+            else if (SessionUser.Role == "Teacher" && SessionUser.Email != "admin@gmail.com")
             {
-                Console.WriteLine(SessionUser.Role);
                 UITeachers.Visibility = Visibility.Visible;      // Hiển thị giao diện giáo viên
             }
-            else
+            else if (SessionUser.Role == ("TrafficPolice"))
             {
                 UIPolice.Visibility = Visibility.Visible;       // Hiển thị giao diện cảnh sát
+            }
+            else if (SessionUser.Email.Equals("admin@gmail.com"))
+            {
+                UIAdmin.Visibility = Visibility.Visible;
             }
         }
 
@@ -80,12 +86,30 @@ namespace PRN_SafeDrive_Aplication.BiLL
             MainContent.Content = new DisplayListAllCourse();
         }
 
+        private void LogOutMethod(object sender, RoutedEventArgs e)
+        {
+            var result = MessageBox.Show("Bạn có muốn đăng xuất?", "!!!", MessageBoxButton.YesNo, MessageBoxImage.Question);
 
-        // hiện thị tất cả khóa học của teacher 
+            if (result == MessageBoxResult.Yes)
+            {
+                SessionUser.Email = string.Empty;
+                SessionUser.Role = string.Empty;
+                SessionUser.UserId = 0;
+                Login loginWindow = new Login();
+                this.Close(); // Đóng cửa sổ hiện tại
+                loginWindow.ShowDialog();
+            }
+            else
+            {
+                // Không làm gì nếu chọn No
+            }
+        }
+
+       // hiện thị tất cả khóa học của teacher
         private void DisplayCourseOfTeacher(object sender, RoutedEventArgs e)
         {
             //MainContent.Content = new DisplayListCourseOfTeacher();
-            MainContent.Content = new ManageCoursesWindow();
+            MainContent.Content = new Teacher.ManageCoursesWindow();
         }
 
 
@@ -134,11 +158,6 @@ namespace PRN_SafeDrive_Aplication.BiLL
                 courseListControl.CourseSelected += CourseListControl_CourseSelected;
                 MainContent.Content = courseListControl;
             }
-            else
-            {
-                ManageCoursesWindow m = new();
-               // m.ShowDialog();
-            }
         }
 
         private void CourseListControl_CourseSelected(object? sender, int courseId)
@@ -186,11 +205,6 @@ namespace PRN_SafeDrive_Aplication.BiLL
                 courseListControl.CourseSelected += CourseListControl_CourseSelected2;
                 MainContent.Content = courseListControl;
             }
-            else
-            {
-                ManageCoursesWindow m = new();
-               // m.ShowDialog();
-            }
         }
 
         private void Button_Click_6(object sender, RoutedEventArgs e)
@@ -212,5 +226,33 @@ namespace PRN_SafeDrive_Aplication.BiLL
         {
             MainContent.Content = new CertificateListView();
         }
+
+        private void Button_Click_ThongKePass(object sender, RoutedEventArgs e)
+        {
+            MainContent.Content = new ThongKePassUserControl();
+        }
+
+        private void btnClassStatistics(object sender, RoutedEventArgs e)
+        {
+            MainContent.Content = new ClassStatisticsView();
+        }
+
+        private void btnSystemStatistics(object sender, RoutedEventArgs e)
+        {
+            MainContent.Content = new OverviewDashboard();
+
+        }
+
+        private void ManageCourseOfAdmin(object sender, RoutedEventArgs e)
+        {
+            MainContent.Content = new Admin.ManageCoursesWindow();
+        }
+
+        private void btnUserManage(object sender, RoutedEventArgs e)
+        {
+            MainContent.Content = new AllUsersControl();
+
+        }
+
     }
 }

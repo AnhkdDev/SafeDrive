@@ -72,30 +72,42 @@ namespace PRN_SafeDrive_Aplication.Police
         // khi sửa vào dataGrid thì sự kiện này tự động sẽ được gọi 
         private void myDataGrid_RowEditEnding(object sender, DataGridRowEditEndingEventArgs e)
         {
-            // Lấy item vừa sửa
-            var EditMark = e.Row.Item as Students;
+            var editMark = e.Row.Item as Students;
 
-            if (EditMark != null)
+            if (editMark != null)
             {
                 try
                 {
                     using (var dbcontext = new Prn1Context())
                     {
-                        dbcontext.Results.Add(new Result
+                        // Kiểm tra xem đã có kết quả của học sinh này chưa
+                        var result = dbcontext.Results
+                            .FirstOrDefault(r => r.UserId == editMark.Id && r.ExamId == _IDExam);
+
+                        if (result != null)
                         {
-                            UserId = EditMark.Id,  // id thằng học sinh 
-                            ExamId = _IDExam,
-                            Score = EditMark.Mark,
-                            PassStatus = EditMark.Mark >= 5 // nếu điểm >= 5 thì pass ok 
-                        });
+                            // Nếu có => cập nhật điểm
+                            result.Score = editMark.Mark;
+                            result.PassStatus = editMark.Mark >= 5;
+                        }
+                        else
+                        {
+                            // Nếu chưa có => thêm mới
+                            dbcontext.Results.Add(new Result
+                            {
+                                UserId = editMark.Id,
+                                ExamId = _IDExam,
+                                Score = editMark.Mark,
+                                PassStatus = editMark.Mark >= 5
+                            });
+                        }
+
                         dbcontext.SaveChanges();
                     }
-
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
-
-                    throw;
+                    MessageBox.Show($"Có lỗi khi lưu điểm: {ex.Message}");
                 }
             }
         }

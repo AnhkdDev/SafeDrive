@@ -116,16 +116,33 @@ namespace PRN_SafeDrive_Aplication.Police
             {
                 string IdExamer = GetIDExamer(cbExamer.SelectedItem.ToString());
                 string IdCourse = GetIDCourse(cbCourseName.SelectedItem.ToString());
-                string date = dpExamDate.SelectedDate.HasValue ? dpExamDate.SelectedDate.Value.ToString("yyyy-MM-dd") : string.Empty;
+
+                if (!dpExamDate.SelectedDate.HasValue)
+                {
+                    MessageBox.Show("Vui lòng chọn ngày thi.", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return false;
+                }
+
+                DateTime selectedDate = dpExamDate.SelectedDate.Value;
+
+                // ✅ Kiểm tra nếu ngày được chọn nằm trong quá khứ
+                if (selectedDate < DateTime.Today)
+                {
+                    MessageBox.Show("Không thể tạo lịch thi trong quá khứ.", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return false;
+                }
+
+                string date = selectedDate.ToString("yyyy-MM-dd");
                 string room = cbRoom.SelectedItem.ToString();
                 string IDCertificates = cbCertificateCode.SelectedItem.ToString();
+
                 using (Prn1Context mydbcontext = new Prn1Context())
                 {
                     mydbcontext.Exams.Add(new Exam()
                     {
                         ExamerId = int.Parse(IdExamer),
                         CourseId = int.Parse(IdCourse),
-                        Date = DateOnly.Parse(date),
+                        Date = DateOnly.FromDateTime(selectedDate),
                         Room = room,
                         Status = "Pending",
                         IDCertificates = GetCodeIDCertificate(IDCertificates)
@@ -138,11 +155,12 @@ namespace PRN_SafeDrive_Aplication.Police
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Lỗi {ex.Message}", "Thông báo ", MessageBoxButton.OKCancel);
-
+                MessageBox.Show($"Lỗi {ex.Message}", "Thông báo", MessageBoxButton.OKCancel);
             }
+
             return false;
         }
+
 
         // tạo lịch thi 
         private void Button_Click(object sender, RoutedEventArgs e)

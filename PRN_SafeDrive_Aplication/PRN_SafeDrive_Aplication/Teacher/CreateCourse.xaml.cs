@@ -35,24 +35,29 @@ namespace PRN_SafeDrive_Aplication.Teacher
 
             DateTime? startDate = StartDatePicker.SelectedDate;
             DateTime? endDate = EndDatePicker.SelectedDate;
-
             if (string.IsNullOrEmpty(courseName) || string.IsNullOrEmpty(contentCourse))
             {
                 MessageBox.Show("Vui lòng điền đầy đủ thông tin khóa học.", "Thông báo đến bạn", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
-            if (!startDate.HasValue || !endDate.HasValue) { 
-             MessageBox.Show("Vui lòng chọn ngày bắt đầu và ngày kết thúc.", "Thông báo đến bạn ", MessageBoxButton.OK, MessageBoxImage.Warning);
-                return;
-            }
-
-            if (startDate > endDate )
+            if (!startDate.HasValue || !endDate.HasValue)
             {
-                MessageBox.Show("Ngày bắt đầu không thể sau ngày kết thúc.", "Thông báo báo đến bạn ", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show("Vui lòng chọn ngày bắt đầu và ngày kết thúc.", "Thông báo đến bạn", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
+            if (startDate < DateTime.Today)
+            {
+                MessageBox.Show("Ngày bắt đầu không được là ngày trong quá khứ.", "Thông báo đến bạn", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            if (startDate > endDate)
+            {
+                MessageBox.Show("Ngày bắt đầu không thể sau ngày kết thúc.", "Thông báo đến bạn", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
             int row = 0;
 
             using (var dbcontext = new Prn1Context())

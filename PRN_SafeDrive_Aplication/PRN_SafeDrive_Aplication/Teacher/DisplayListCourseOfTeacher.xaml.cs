@@ -55,12 +55,6 @@ namespace PRN_SafeDrive_Aplication.Teacher
             }
         }
 
-
-        
-
-
-
-
         //  gọi màn hình hiển thị khi thằng user ấn vào 1  lớp học 
         public void DisplayMemeberOFClass(object sender, MouseButtonEventArgs e)
         {

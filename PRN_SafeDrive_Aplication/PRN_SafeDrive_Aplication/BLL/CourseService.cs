@@ -20,41 +20,6 @@ namespace PRN_SafeDrive_Aplication.BLL
             }
         }
 
-        //public static List<dynamic> GetStudentsByCourseId(int courseId)
-        //{
-        //    using (var db = new Prn1Context())
-        //    {
-        //        return (from reg in db.Registrations
-        //                join u in db.Users on reg.UserId equals u.UserId
-        //                where reg.CourseId == courseId
-        //                select new
-        //                {
-        //                    u.FullName,
-        //                    u.Email,
-        //                    reg.Status
-        //                }).ToList<dynamic>();
-        //    }
-
-        //}
-
-        //public List<Course> GetCoursesByEmail(string email)
-        //{
-        //    email = email.Trim().ToLower();
-
-        //    using (var context = new Prn1Context())
-        //    {
-        //        var courses = (from r in context.Registrations
-        //                       join u in context.Users on r.UserId equals u.UserId
-        //                       join c in context.Courses on r.UserId equals c.TeacherId
-        //                       where u.Email.ToLower().Trim() == email
-        //                       select c).ToList();
-
-        //        MessageBox.Show($"Tìm thấy {courses.Count} khóa học cho email: {email}");
-        //        return courses;
-        //    }
-        //}
-
-
         public List<Course> GetCoursesByEmail(string email)
         {
             using (var context = new Prn1Context())

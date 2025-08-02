@@ -12,7 +12,7 @@ namespace PRN_SafeDrive_Aplication.BiLL
     public  class UserLog
     {
 
-        // đăng nhâpk
+        // đăng nhập
         public static bool LoginUser(string email, string password)
         {
 

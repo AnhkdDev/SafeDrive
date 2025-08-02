@@ -37,10 +37,5 @@ namespace PRN_SafeDrive_Aplication.Police
 
             dgCertificates.ItemsSource = data;
         }
-
-        private void ExportCertificates_Click(object sender, RoutedEventArgs e)
-        {
-            MessageBox.Show("Chức năng xuất chưa được triển khai.");
-        }
     }
     }
